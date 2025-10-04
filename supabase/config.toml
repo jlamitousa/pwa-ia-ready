@@ -1,0 +1,263 @@
+# Configuration Supabase pour RAG Admin Console
+# Documentation: https://supabase.com/docs/guides/local-development/cli/config
+
+# Identifiant unique du projet
+project_id = "rag-admin-console"
+
+[api]
+enabled = true
+# Port pour l'API URL
+port = 54321
+# Schémas exposés dans l'API
+schemas = ["public", "graphql_public", "rag_admin"]
+# Schémas supplémentaires dans le search_path
+extra_search_path = ["public", "extensions", "rag_admin"]
+# Nombre maximum de lignes retournées
+max_rows = 1000
+
+[api.tls]
+# HTTPS local avec certificat auto-signé
+enabled = false
+
+[db]
+# Port pour la base de données locale
+port = 54322
+# Port pour la base de données shadow (diff)
+shadow_port = 54320
+# Version majeure de PostgreSQL
+major_version = 15
+
+[db.pooler]
+enabled = false
+# Port pour le pooler de connexions
+port = 54329
+# Mode du pooler
+pool_mode = "transaction"
+# Taille par défaut du pool
+default_pool_size = 20
+# Nombre maximum de connexions client
+max_client_conn = 100
+
+[db.migrations]
+# Fichiers de schéma pour les migrations
+schema_paths = ["./migrations/*.sql"]
+
+[db.seed]
+# Activer le seeding après les migrations
+enabled = true
+# Fichiers de seed
+sql_paths = ["./seeds/*.sql"]
+
+[realtime]
+enabled = true
+# Version IP pour realtime
+ip_version = "IPv4"
+# Longueur maximale des headers HTTP
+max_header_length = 4096
+
+[studio]
+enabled = true
+# Port pour Supabase Studio
+port = 54323
+# URL externe de l'API
+api_url = "http://127.0.0.1"
+# Clé API OpenAI pour Supabase AI
+openai_api_key = "env(OPENAI_API_KEY)"
+
+# Serveur de test d'emails
+[inbucket]
+enabled = true
+# Port pour l'interface web d'Inbucket
+port = 54324
+# Ports supplémentaires pour les tests d'emails
+smtp_port = 54325
+pop3_port = 54326
+admin_email = "admin@rag-console.local"
+sender_name = "RAG Admin Console"
+
+[storage]
+enabled = true
+# Taille maximale des fichiers
+file_size_limit = "50MiB"
+
+# Buckets de stockage locaux
+[storage.buckets.rag-exports]
+public = false
+file_size_limit = "10MiB"
+allowed_mime_types = ["application/json", "application/yaml", "text/plain"]
+objects_path = "./exports"
+
+[auth]
+enabled = true
+# URL de base du site web
+site_url = "http://127.0.0.1:3000"
+# URLs de redirection autorisées
+additional_redirect_urls = ["https://127.0.0.1:3000", "http://localhost:3000"]
+# Durée de validité des tokens (en secondes)
+jwt_expiry = 3600
+# Rotation des refresh tokens
+enable_refresh_token_rotation = true
+# Réutilisation des refresh tokens après expiration
+refresh_token_reuse_interval = 10
+# Autoriser les inscriptions
+enable_signup = true
+# Autoriser les connexions anonymes
+enable_anonymous_sign_ins = false
+# Autoriser la liaison manuelle des comptes
+enable_manual_linking = false
+# Longueur minimale des mots de passe
+minimum_password_length = 8
+# Exigences des mots de passe
+password_requirements = "lower_upper_letters_digits"
+
+[auth.rate_limit]
+# Limite d'emails par heure
+email_sent = 10
+# Limite de SMS par heure
+sms_sent = 30
+# Limite d'utilisateurs anonymes par heure
+anonymous_users = 30
+# Limite de refresh de tokens par 5 minutes
+token_refresh = 150
+# Limite de connexions/inscriptions par 5 minutes
+sign_in_sign_ups = 30
+# Limite de vérifications OTP par 5 minutes
+token_verifications = 30
+
+[auth.email]
+# Autoriser les inscriptions par email
+enable_signup = true
+# Confirmation double des changements d'email
+double_confirm_changes = true
+# Confirmation d'email requise
+enable_confirmations = false
+# Changement de mot de passe sécurisé
+secure_password_change = true
+# Fréquence minimale entre les emails
+max_frequency = "1s"
+# Longueur de l'OTP email
+otp_length = 6
+# Expiration de l'OTP email (en secondes)
+otp_expiry = 3600
+
+# Configuration SMTP pour les emails
+[auth.email.smtp]
+enabled = false
+# host = "smtp.gmail.com"
+# port = 587
+# user = "your-email@gmail.com"
+# pass = "env(EMAIL_PASSWORD)"
+# admin_email = "admin@rag-console.local"
+# sender_name = "RAG Admin Console"
+
+# Templates d'emails personnalisés (optionnel)
+# [auth.email.template.invite]
+# subject = "Invitation à la Console RAG Admin"
+# content_path = "./templates/invite.html"
+
+# [auth.email.template.confirmation]
+# subject = "Confirmez votre email - RAG Admin Console"
+# content_path = "./templates/confirmation.html"
+
+# [auth.email.template.recovery]
+# subject = "Réinitialisation de mot de passe - RAG Admin Console"
+# content_path = "./templates/recovery.html"
+
+[auth.sms]
+# Autoriser les inscriptions par SMS
+enable_signup = false
+# Confirmation de numéro de téléphone requise
+enable_confirmations = false
+# Template pour l'envoi d'OTP
+template = "Votre code RAG Admin Console est {{ .Code }}"
+# Fréquence minimale entre les SMS
+max_frequency = "5s"
+
+# Configuration des sessions
+[auth.sessions]
+# Déconnexion forcée après la durée spécifiée
+timebox = "24h"
+# Déconnexion forcée après inactivité
+inactivity_timeout = "8h"
+
+# Hook personnalisé pour les tokens d'accès
+[auth.hook.custom_access_token]
+enabled = false
+# uri = "pg-functions://rag_admin/hooks/custom_access_token"
+
+# Configuration MFA
+[auth.mfa]
+# Nombre maximum de facteurs MFA par utilisateur
+max_enrolled_factors = 5
+
+# MFA via App Authenticator (TOTP)
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+# MFA via SMS
+[auth.mfa.phone]
+enroll_enabled = false
+verify_enabled = false
+otp_length = 6
+template = "Votre code MFA RAG Admin est {{ .Code }}"
+max_frequency = "5s"
+
+# MFA via WebAuthn
+[auth.mfa.web_authn]
+enroll_enabled = false
+verify_enabled = false
+
+# Fournisseurs OAuth externes
+[auth.external.google]
+enabled = false
+client_id = ""
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+redirect_uri = ""
+
+[auth.external.github]
+enabled = false
+client_id = ""
+secret = "env(SUPABASE_AUTH_EXTERNAL_GITHUB_SECRET)"
+redirect_uri = ""
+
+[auth.external.microsoft]
+enabled = false
+client_id = ""
+secret = "env(SUPABASE_AUTH_EXTERNAL_MICROSOFT_SECRET)"
+redirect_uri = ""
+
+# Edge Runtime pour les fonctions
+[edge_runtime]
+enabled = true
+# Politique de requête
+policy = "oneshot"
+# Port pour l'inspecteur Chrome
+inspector_port = 8083
+# Version de Deno
+deno_version = 1
+
+# Secrets pour Edge Runtime
+[edge_runtime.secrets]
+# openai_api_key = "env(OPENAI_API_KEY)"
+# anthropic_api_key = "env(ANTHROPIC_API_KEY)"
+
+# Analytics
+[analytics]
+enabled = true
+port = 54327
+# Backend pour les analytics
+backend = "postgres"
+
+# Fonctionnalités expérimentales
+[experimental]
+# Configuration OrioleDB (S3)
+orioledb_version = ""
+# Configuration S3
+s3_host = "env(S3_HOST)"
+s3_region = "env(S3_REGION)"
+s3_access_key = "env(S3_ACCESS_KEY)"
+s3_secret_key = "env(S3_SECRET_KEY)"
+
+# Configuration des fonctions Edge (optionnel)
+# Les fonctions Edge sont configurées dans le dossier ./functions/
