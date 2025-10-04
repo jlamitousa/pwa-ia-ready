@@ -9,9 +9,9 @@ enabled = true
 # Port pour l'API URL
 port = 54321
 # Schémas exposés dans l'API
-schemas = ["public", "graphql_public", "rag_admin"]
+schemas = ["rag_admin", "public", "graphql_public"]
 # Schémas supplémentaires dans le search_path
-extra_search_path = ["public", "extensions", "rag_admin"]
+extra_search_path = ["rag_admin", "public", "extensions"]
 # Nombre maximum de lignes retournées
 max_rows = 1000
 
