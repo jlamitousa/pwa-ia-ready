@@ -1,4 +1,4 @@
-import { createSupabaseClient } from '@/lib/supabase'
+import { createSupabaseServerClient } from '@/lib/supabase'
 import { 
   EntityType, 
   FieldCatalog, 
@@ -14,11 +14,15 @@ import {
   ExportManifest
 } from '@/types/rag'
 
-const supabase = createSupabaseClient()
-
 export class RAGService {
+  // Helper method to get Supabase client
+  private static getClient() {
+    return createSupabaseServerClient()
+  }
+
   // Entity Types
   static async getEntityTypes(): Promise<EntityType[]> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('entity_type')
       .select('*')
@@ -29,6 +33,7 @@ export class RAGService {
   }
 
   static async getEntityType(entityType: string): Promise<EntityType | null> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('entity_type')
       .select('*')
@@ -40,6 +45,7 @@ export class RAGService {
   }
 
   static async createEntityType(entityType: EntityType): Promise<EntityType> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('entity_type')
       .insert(entityType)
@@ -51,6 +57,7 @@ export class RAGService {
   }
 
   static async updateEntityType(entityType: string, updates: Partial<EntityType>): Promise<EntityType> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('entity_type')
       .update(updates)
@@ -63,6 +70,7 @@ export class RAGService {
   }
 
   static async deleteEntityType(entityType: string): Promise<void> {
+    const supabase = this.getClient()
     const { error } = await supabase
       .from('entity_type')
       .delete()
@@ -73,6 +81,7 @@ export class RAGService {
 
   // Field Catalog
   static async getFieldCatalog(entityType?: string): Promise<FieldCatalog[]> {
+    const supabase = this.getClient()
     let query = supabase
       .from('field_catalog')
       .select('*')
@@ -90,6 +99,7 @@ export class RAGService {
   }
 
   static async getFieldCatalogItem(entityType: string, columnName: string): Promise<FieldCatalog | null> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('field_catalog')
       .select('*')
@@ -102,6 +112,7 @@ export class RAGService {
   }
 
   static async createFieldCatalogItem(field: FieldCatalog): Promise<FieldCatalog> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('field_catalog')
       .insert(field)
@@ -117,6 +128,7 @@ export class RAGService {
     columnName: string, 
     updates: Partial<FieldCatalog>
   ): Promise<FieldCatalog> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('field_catalog')
       .update(updates)
@@ -130,6 +142,7 @@ export class RAGService {
   }
 
   static async deleteFieldCatalogItem(entityType: string, columnName: string): Promise<void> {
+    const supabase = this.getClient()
     const { error } = await supabase
       .from('field_catalog')
       .delete()
@@ -141,6 +154,7 @@ export class RAGService {
 
   // Rules
   static async getRules(entityType?: string): Promise<Rule[]> {
+    const supabase = this.getClient()
     let query = supabase
       .from('rules')
       .select('*')
@@ -158,6 +172,7 @@ export class RAGService {
   }
 
   static async getRule(ruleId: string): Promise<Rule | null> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('rules')
       .select('*')
@@ -169,6 +184,7 @@ export class RAGService {
   }
 
   static async createRule(rule: Rule): Promise<Rule> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('rules')
       .insert(rule)
@@ -180,6 +196,7 @@ export class RAGService {
   }
 
   static async updateRule(ruleId: string, updates: Partial<Rule>): Promise<Rule> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('rules')
       .update(updates)
@@ -192,6 +209,7 @@ export class RAGService {
   }
 
   static async deleteRule(ruleId: string): Promise<void> {
+    const supabase = this.getClient()
     const { error } = await supabase
       .from('rules')
       .delete()
@@ -202,6 +220,7 @@ export class RAGService {
 
   // Relations
   static async getRelations(entityType?: string): Promise<Relation[]> {
+    const supabase = this.getClient()
     let query = supabase
       .from('relations')
       .select('*')
@@ -219,6 +238,7 @@ export class RAGService {
   }
 
   static async createRelation(relation: Relation): Promise<Relation> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('relations')
       .insert(relation)
@@ -230,6 +250,7 @@ export class RAGService {
   }
 
   static async updateRelation(id: number, updates: Partial<Relation>): Promise<Relation> {
+    const supabase = this.getClient()
     const { data, error } = await supabase
       .from('relations')
       .update(updates)
@@ -242,6 +263,7 @@ export class RAGService {
   }
 
   static async deleteRelation(id: number): Promise<void> {
+    const supabase = this.getClient()
     const { error } = await supabase
       .from('relations')
       .delete()
@@ -252,6 +274,7 @@ export class RAGService {
 
   // Intent Coverage
   static async getIntentCoverage(entityType?: string): Promise<IntentCoverage[]> {
+    const supabase = this.getClient()
     let query = supabase.rpc('calculate_intent_coverage', { entity_type_param: entityType || '' })
     
     if (entityType) {
@@ -279,6 +302,7 @@ export class RAGService {
 
   // Validation
   static async validateSchema(): Promise<ValidationResult> {
+    const supabase = this.getClient()
     const { data, error } = await supabase.rpc('validate_schema')
     
     if (error) throw error
@@ -287,6 +311,7 @@ export class RAGService {
 
   // Export
   static async generateExportManifest(): Promise<ExportManifest> {
+    const supabase = this.getClient()
     const { data, error } = await supabase.rpc('generate_export_manifest')
     
     if (error) throw error
@@ -299,6 +324,7 @@ export class RAGService {
     message: string
     executionTime: number
   }> {
+    const supabase = this.getClient()
     const { data, error } = await supabase.rpc('test_rule', {
       rule_sql: ruleSql,
       test_variables: testVariables
