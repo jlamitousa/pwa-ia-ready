@@ -286,20 +286,23 @@ BEGIN
     FROM rag_admin.calculate_intent_coverage(et.entity_type) ic
     JOIN rag_admin.entity_type et ON et.entity_type = ic.entity_type;
     
-    -- Avertissements de couverture faible
-    FOR ic IN SELECT * FROM rag_admin.calculate_intent_coverage(et.entity_type) ic
-    JOIN rag_admin.entity_type et ON et.entity_type = ic.entity_type
-    LOOP
-        IF ic.findable_pct < 20 THEN
-            warning_list := array_append(warning_list, 
-                'Couverture trouvable faible pour ' || ic.entity_type || ': ' || ic.findable_pct || '%');
-        END IF;
-        
-        IF ic.comparable_pct < 10 THEN
-            warning_list := array_append(warning_list, 
-                'Couverture comparable faible pour ' || ic.entity_type || ': ' || ic.comparable_pct || '%');
-        END IF;
-    END LOOP;
+    -- Avertissements de couverture faible (simplifié)
+    -- Vérifier la couverture globale
+    IF EXISTS (
+        SELECT 1 FROM rag_admin.calculate_intent_coverage(et.entity_type) ic
+        JOIN rag_admin.entity_type et ON et.entity_type = ic.entity_type
+        WHERE ic.findable_pct < 20
+    ) THEN
+        warning_list := array_append(warning_list, 'Certaines entités ont une couverture trouvable faible (< 20%)');
+    END IF;
+    
+    IF EXISTS (
+        SELECT 1 FROM rag_admin.calculate_intent_coverage(et.entity_type) ic
+        JOIN rag_admin.entity_type et ON et.entity_type = ic.entity_type
+        WHERE ic.comparable_pct < 10
+    ) THEN
+        warning_list := array_append(warning_list, 'Certaines entités ont une couverture comparable faible (< 10%)');
+    END IF;
     
     RETURN QUERY SELECT 
         (array_length(error_list, 1) IS NULL OR array_length(error_list, 1) = 0) as is_valid,

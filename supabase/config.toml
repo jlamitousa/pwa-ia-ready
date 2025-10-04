@@ -44,9 +44,9 @@ schema_paths = ["./migrations/*.sql"]
 
 [db.seed]
 # Activer le seeding après les migrations
-enabled = true
-# Fichiers de seed
-sql_paths = ["./seeds/*.sql"]
+enabled = false
+# Fichiers de seed (désactivé)
+# sql_paths = ["./seeds/*.sql"]
 
 [realtime]
 enabled = true
@@ -80,12 +80,12 @@ enabled = true
 # Taille maximale des fichiers
 file_size_limit = "50MiB"
 
-# Buckets de stockage locaux
-[storage.buckets.rag-exports]
-public = false
-file_size_limit = "10MiB"
-allowed_mime_types = ["application/json", "application/yaml", "text/plain"]
-objects_path = "./exports"
+# Buckets de stockage locaux (optionnel)
+# [storage.buckets.rag-exports]
+# public = false
+# file_size_limit = "10MiB"
+# allowed_mime_types = ["application/json", "application/yaml", "text/plain"]
+# objects_path = "./exports"
 
 [auth]
 enabled = true
