@@ -1,7 +1,6 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode } from 'react'
-import { createSupabaseClient } from '@/lib/supabase'
 
 interface AppContextType {
   currentEntityType: string | null
