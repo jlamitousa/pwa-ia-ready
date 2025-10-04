@@ -24,7 +24,7 @@ export class RAGService {
   static async getEntityTypes(): Promise<EntityType[]> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('entity_type')
+      .from('rag_admin.entity_type')
       .select('*')
       .order('entity_type')
     
@@ -35,7 +35,7 @@ export class RAGService {
   static async getEntityType(entityType: string): Promise<EntityType | null> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('entity_type')
+      .from('rag_admin.entity_type')
       .select('*')
       .eq('entity_type', entityType)
       .single()
@@ -47,7 +47,7 @@ export class RAGService {
   static async createEntityType(entityType: EntityType): Promise<EntityType> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('entity_type')
+      .from('rag_admin.entity_type')
       .insert(entityType)
       .select()
       .single()
@@ -59,7 +59,7 @@ export class RAGService {
   static async updateEntityType(entityType: string, updates: Partial<EntityType>): Promise<EntityType> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('entity_type')
+      .from('rag_admin.entity_type')
       .update(updates)
       .eq('entity_type', entityType)
       .select()
@@ -72,7 +72,7 @@ export class RAGService {
   static async deleteEntityType(entityType: string): Promise<void> {
     const supabase = this.getClient()
     const { error } = await supabase
-      .from('entity_type')
+      .from('rag_admin.entity_type')
       .delete()
       .eq('entity_type', entityType)
     
@@ -83,7 +83,7 @@ export class RAGService {
   static async getFieldCatalog(entityType?: string): Promise<FieldCatalog[]> {
     const supabase = this.getClient()
     let query = supabase
-      .from('field_catalog')
+      .from('rag_admin.field_catalog')
       .select('*')
       .order('entity_type', { ascending: true })
       .order('column_name', { ascending: true })
@@ -101,7 +101,7 @@ export class RAGService {
   static async getFieldCatalogItem(entityType: string, columnName: string): Promise<FieldCatalog | null> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('field_catalog')
+      .from('rag_admin.field_catalog')
       .select('*')
       .eq('entity_type', entityType)
       .eq('column_name', columnName)
@@ -114,7 +114,7 @@ export class RAGService {
   static async createFieldCatalogItem(field: FieldCatalog): Promise<FieldCatalog> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('field_catalog')
+      .from('rag_admin.field_catalog')
       .insert(field)
       .select()
       .single()
@@ -130,7 +130,7 @@ export class RAGService {
   ): Promise<FieldCatalog> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('field_catalog')
+      .from('rag_admin.field_catalog')
       .update(updates)
       .eq('entity_type', entityType)
       .eq('column_name', columnName)
@@ -144,7 +144,7 @@ export class RAGService {
   static async deleteFieldCatalogItem(entityType: string, columnName: string): Promise<void> {
     const supabase = this.getClient()
     const { error } = await supabase
-      .from('field_catalog')
+      .from('rag_admin.field_catalog')
       .delete()
       .eq('entity_type', entityType)
       .eq('column_name', columnName)
@@ -156,7 +156,7 @@ export class RAGService {
   static async getRules(entityType?: string): Promise<Rule[]> {
     const supabase = this.getClient()
     let query = supabase
-      .from('rules')
+      .from('rag_admin.rules')
       .select('*')
       .order('entity_type', { ascending: true })
       .order('rule_id', { ascending: true })
@@ -174,7 +174,7 @@ export class RAGService {
   static async getRule(ruleId: string): Promise<Rule | null> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('rules')
+      .from('rag_admin.rules')
       .select('*')
       .eq('rule_id', ruleId)
       .single()
@@ -186,7 +186,7 @@ export class RAGService {
   static async createRule(rule: Rule): Promise<Rule> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('rules')
+      .from('rag_admin.rules')
       .insert(rule)
       .select()
       .single()
@@ -198,7 +198,7 @@ export class RAGService {
   static async updateRule(ruleId: string, updates: Partial<Rule>): Promise<Rule> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('rules')
+      .from('rag_admin.rules')
       .update(updates)
       .eq('rule_id', ruleId)
       .select()
@@ -211,7 +211,7 @@ export class RAGService {
   static async deleteRule(ruleId: string): Promise<void> {
     const supabase = this.getClient()
     const { error } = await supabase
-      .from('rules')
+      .from('rag_admin.rules')
       .delete()
       .eq('rule_id', ruleId)
     
@@ -222,7 +222,7 @@ export class RAGService {
   static async getRelations(entityType?: string): Promise<Relation[]> {
     const supabase = this.getClient()
     let query = supabase
-      .from('relations')
+      .from('rag_admin.relations')
       .select('*')
       .order('entity_type_from', { ascending: true })
       .order('entity_type_to', { ascending: true })
@@ -240,7 +240,7 @@ export class RAGService {
   static async createRelation(relation: Relation): Promise<Relation> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('relations')
+      .from('rag_admin.relations')
       .insert(relation)
       .select()
       .single()
@@ -252,7 +252,7 @@ export class RAGService {
   static async updateRelation(id: number, updates: Partial<Relation>): Promise<Relation> {
     const supabase = this.getClient()
     const { data, error } = await supabase
-      .from('relations')
+      .from('rag_admin.relations')
       .update(updates)
       .eq('id', id)
       .select()
@@ -265,7 +265,7 @@ export class RAGService {
   static async deleteRelation(id: number): Promise<void> {
     const supabase = this.getClient()
     const { error } = await supabase
-      .from('relations')
+      .from('rag_admin.relations')
       .delete()
       .eq('id', id)
     
